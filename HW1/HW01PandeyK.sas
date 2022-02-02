@@ -1,7 +1,7 @@
 *
 Programmed by: Kamlesh Pandey
 Programmed on: 2022-01-30
-Programmed to: Programming HW #1
+Programmed to: Programming for HW #1
 
 ;
 
@@ -10,7 +10,7 @@ x 'cd L:\st555\Data';
 libname InputDs "."; 
 
 *Establish librefs and filerefs for outgoing files;
-x 'cd S:\ST555';
+x 'cd S:\HW1';
 libname HW1 "." ;
 
 *Global output options;
@@ -20,25 +20,27 @@ options nodate number;
 ods noproctitle;
 ods exclude EngineHost;
 ods _all_ close;
-* Turing off SAS default lisitng destination so that output can be saved at a particular directory;
+
+* Turing off SAS default lisitng destination so that output can be saved at a particular destination;
 ods listing;
 ods pdf file = 'HW1 Pandey IPUMSReport.pdf' style=Festival;
 
-* Contents of BasicSales dataset based on thr variable's POSITION on SAS dataset;
+* Contents of BasicSales dataset based on the variable's POSITION on SAS dataset;
 title 'Descriptor Information Before Sorting';
 proc contents data=InputDS.BasicSales varnum ;
   run;
 
-*Sorting the dataset based on the Region Cust EmpID and descending TotalDue;
+*Sorting the dataset based on the Region Cust EmpID and descending TotalDue and saving sorted dataset in HW1 directory;
 proc sort data=InputDS.BasicSales out=HW1.BASICSALES;
   by Region Cust EmpID descending TotalDue;
 run;
 title;
-* Above title statement to discontinue printing of one Title continuously in the report;
+* Above title statement is to discontinue printing of a Title continuously in the report;
 title1 'Descriptor Information After Sorting';
 *Excluding EngineHost variable from the report;
 ods exclude EngineHost;
-proc contents data = HW1.BASICSALES varnum; * We have to use the sorted data(HW1.BASICSALES) for our report;
+* We have to use the sorted data(HW1.BASICSALES) for our report;
+proc contents data = HW1.BASICSALES varnum; 
   run;
 title1;
 
@@ -53,6 +55,7 @@ run;
 
 * Setting titles for PROC Mean Analysis; 
 title2 'Selected Numerical Sumamry of Basic Sales';
+*Setting height for the subtitle;
 title3 h=8pt 'by Region, Customer, and Total Due Category';
 
 * Defining footnote for the PROC Mean Analysis;
@@ -81,9 +84,9 @@ run;
 title2;
 title3;
 options label;
-title4 'Number of Billed Hours by Region and Region by Employee and Region by Amount Billed Classification';
+title4 j= CENTER 'Number of Billed Hours by Region and Region by Employee and Region by Amount Billed Classification';
 proc freq data= InputDS.BasicSales;
-  *Using Table statement to generate a frequency table;
+*Using Table statement to generate a frequency table;
   table Region Region*EmpID Region*TotalDue;
   label Region = 'Sales Region' 
         EmpID = 'Employee ID' 
@@ -127,6 +130,6 @@ title6;
 * Closing opened pdf;
 ods pdf close;
 
-* Turining on the listing destination;
+* Switching ON the listing destination;
 ods listing;
 quit;
